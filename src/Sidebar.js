@@ -19,7 +19,7 @@ class Tab extends React.Component {
 
   render() {
     const sidebar = this.context.sidebar;
-    const active = this.props.id === sidebar.state.selected ? ' active' : '';
+    const active = this.props.id === sidebar.props.selected ? ' active' : '';
     const closeIcon = sidebar.props.closeIcon ? sidebar.props.closeIcon
           : sidebar.props.position === 'right' ? "fa fa-caret-right"
           : "fa fa-caret-left";
@@ -58,21 +58,6 @@ class Sidebar extends MapComponent<LeafletElement, Props> {
     ]).isRequired,
   }
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      collapsed: !!props.collapsed,
-      selected: props.selected || React.Children.toArray(props.children)[0].props.id,
-    };
-  }
-
-  componentWillReceiveProps(nextProps) {
-    this.setState({
-      collapsed: !! nextProps.collapsed,
-      selected: nextProps.selected || React.Children.toArray(nextProps.children)[0].props.id,
-    })
-  }
-
   getChildContext() {
     return { sidebar: this };
   }
@@ -80,17 +65,12 @@ class Sidebar extends MapComponent<LeafletElement, Props> {
   onClose(e) {
     e.preventDefault();
     e.stopPropagation();
-    this.setState({ collapsed: true });
     this.props.onClose && this.props.onClose();
   }
 
   onOpen(e, tabid) {
     e.preventDefault();
     e.stopPropagation();
-    this.setState({
-      collapsed: false,
-      selected: tabid,
-    });
     this.props.onOpen && this.props.onOpen(tabid);
   }
 
@@ -100,7 +80,7 @@ class Sidebar extends MapComponent<LeafletElement, Props> {
       icon = tab.props.icon();
     else if (typeof(tab.props.icon) === 'string')
       icon = <i className={tab.props.icon} />;
-    const active = tab.props.id === this.state.selected ? ' active' : '';
+    const active = tab.props.id === this.props.selected ? ' active' : '';
     return (
       <li className={active} key={tab.props.id}>
         <a href={'#' + tab.props.id} role="tab" onClick={e => this.onOpen(e, tab.props.id)}>
@@ -118,7 +98,7 @@ class Sidebar extends MapComponent<LeafletElement, Props> {
   // Override render() so the <Map> element contains a div we can render to
   render() {
     const position = ' sidebar-' + (this.props.position || 'left');
-    const collapsed = this.state.collapsed ? ' collapsed' : '';
+    const collapsed = this.props.collapsed ? ' collapsed' : '';
 
     const tabs = React.Children.toArray(this.props.children);
     const bottomtabs = tabs.filter(t => t.props.anchor === 'bottom');

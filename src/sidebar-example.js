@@ -3,6 +3,23 @@ import { Map, TileLayer } from 'react-leaflet';
 import { Sidebar, Tab } from './Sidebar';
 
 export default class SidebarExample extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      collapsed: false,
+      selected: 'home',
+    };
+  }
+
+  onClose() {
+    this.setState({collapsed: true});
+  }
+  onOpen(id) {
+    this.setState({
+      collapsed: false,
+      selected: id,
+    })
+  }
 
   render() {
     return (
@@ -12,7 +29,8 @@ export default class SidebarExample extends Component {
             attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
             url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
           />
-          <Sidebar id="sidebar">
+          <Sidebar id="sidebar" collapsed={this.state.collapsed} selected={this.state.selected}
+                   onOpen={this.onOpen.bind(this)} onClose={this.onClose.bind(this)}>
             <Tab id="home" header="Home" icon="fa fa-home">
               <p>Sidebar!</p>
             </Tab>
