@@ -6,8 +6,11 @@
     "react-scripts": "1.0.12"
   },
   "dependencies": {
+    "leaflet": "^1.2.0",
+    "leaflet-sidebar-v2": "^1.0.0",
     "react": "^15.6.1",
-    "react-dom": "^15.6.1"
+    "react-dom": "^15.6.1",
+    "react-leaflet": "^1.6.4"
   },
   "scripts": {
     "start": "react-scripts start",
