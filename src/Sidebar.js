@@ -57,6 +57,13 @@ class Sidebar extends MapComponent<LeafletElement, Props> {
     };
   }
 
+  componentWillReceiveProps(nextProps) {
+    this.setState({
+      collapsed: !! nextProps.collapsed,
+      selected: nextProps.selected || React.Children.toArray(nextProps.children)[0].props.id,
+    })
+  }
+
   getChildContext() {
     return { sidebar: this };
   }
