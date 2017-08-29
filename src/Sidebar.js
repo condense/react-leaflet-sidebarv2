@@ -9,6 +9,7 @@ type Props = {
   id: string,
   position?: string,            // left or right
   selected?: string,
+  disabled?: boolean,
   // renderClose?
   // onOpening
   // onClosing
@@ -23,8 +24,9 @@ class Tab extends React.Component {
   // anchor?
   render() {
     // TODO: handle caret-left/right appropriately, and different fonts
+    const active = this.props.active ? ' active' : '';
     return (
-      <div id="home" className="sidebar-pane active">
+      <div id="home" className={"sidebar-pane" + active}>
         <h1 className="sidebar-header">
           {this.props.header}
           <div className="sidebar-close"><i className="fa fa-caret-left"></i></div>
@@ -72,8 +74,6 @@ class Sidebar extends MapComponent<LeafletElement, Props> {
     var bottomtabs = tabs.filter(t => t.props.anchor === 'bottom');
     var toptabs = tabs.filter(t => t.props.anchor !== 'bottom');
     return (
-      // FIXME: sidebar-left/right from props
-      // FIXME: add/remove collapsed class (state)
       // FIXME: from child props (including first as "home", and maintaining "active" state)
       <div id="sidebar" className={"sidebar leaflet-touch" + position + collapsed}>
         <div className="sidebar-tabs">
@@ -81,6 +81,7 @@ class Sidebar extends MapComponent<LeafletElement, Props> {
             {toptabs.map(t => this.renderTab(t))}
           </ul>
           <ul role="tablist">   {/* Bottom-aligned */}
+            {bottomtabs.map(t => this.renderTab(t))}
           </ul>
         </div>
         <div className="sidebar-content">
