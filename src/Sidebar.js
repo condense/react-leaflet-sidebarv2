@@ -36,7 +36,7 @@ class Tab extends React.Component {
       <div id="home" className={"sidebar-pane" + active}>
         <h1 className="sidebar-header">
           {this.props.header}
-          <div className="sidebar-close"><i className={closeIcon}></i></div>
+          <div className="sidebar-close"><i className={closeIcon} onClick={this.props.onClose}></i></div>
         </h1>
         {this.props.children}
       </div>
@@ -61,6 +61,23 @@ class Sidebar extends MapComponent<LeafletElement, Props> {
     return { sidebar: this };
   }
 
+  onClose(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    this.setState({ collapsed: true });
+    this.props.onClose && this.props.onClose();
+  }
+
+  onOpen(e, tabid) {
+    e.preventDefault();
+    e.stopPropagation();
+    this.setState({
+      collapsed: false,
+      selected: tabid,
+    });
+    this.props.onOpen && this.props.onOpen(tabid);
+  }
+
   renderTab(tab) {
     var icon;
     if (typeof(tab.props.icon) === 'function')
@@ -70,11 +87,16 @@ class Sidebar extends MapComponent<LeafletElement, Props> {
     const active = tab.props.id === this.state.selected ? ' active' : '';
     return (
       <li className={active} key={tab.props.id}>
-        <a href={'#' + tab.props.id} role="tab">
+        <a href={'#' + tab.props.id} role="tab" onClick={e => this.onOpen(e, tab.props.id)}>
           {icon}
         </a>
       </li>
     );
+  }
+
+  renderPanes(children) {
+    return React.Children.map(children,
+                              p => React.cloneElement(p, {onClose: this.onClose.bind(this)}))
   }
 
   // Override render() so the <Map> element contains a div we can render to
@@ -96,7 +118,7 @@ class Sidebar extends MapComponent<LeafletElement, Props> {
           </ul>
         </div>
         <div className="sidebar-content">
-          {this.props.children}
+          {this.renderPanes(this.props.children)}
         </div>
       </div>
     );
