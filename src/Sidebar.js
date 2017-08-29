@@ -21,11 +21,14 @@ class Tab extends React.Component {
     sidebar: PropTypes.object   // Hack due to forward-references
   }
 
-  // Props:
-  // id
-  // renderIcon
-  // header
-  // anchor?
+  static propTypes = {
+    id: PropTypes.string.isRequired,
+    header: PropTypes.string.isRequired,
+    icon: PropTypes.oneOfType([PropTypes.string, PropTypes.func]).isRequired,
+    closeIcon: PropTypes.string,
+    anchor: PropTypes.oneOf(['top', 'bottom']),
+  }
+
   render() {
     const sidebar = this.context.sidebar;
     const active = this.props.id === sidebar.state.selected ? ' active' : '';
@@ -44,9 +47,26 @@ class Tab extends React.Component {
   }
 }
 
+const TabType = PropTypes.shape({
+  type: PropTypes.oneOf([Tab])
+});
+
 class Sidebar extends MapComponent<LeafletElement, Props> {
   static childContextTypes = {
     sidebar: PropTypes.instanceOf(Sidebar),
+  }
+
+  static propTypes = {
+    id: PropTypes.string.isRequired,
+    collapsed: PropTypes.bool,
+    position: PropTypes.oneOf(['left', 'right']),
+    selected: PropTypes.string,
+    onClose: PropTypes.func,
+    onOpen: PropTypes.func,
+    children: PropTypes.oneOfType([
+      PropTypes.arrayOf(TabType),
+      TabType
+    ]).isRequired,
   }
 
   constructor(props) {
