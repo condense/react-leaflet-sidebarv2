@@ -27,10 +27,10 @@ class Tab extends React.Component {
   // header
   // anchor?
   render() {
-    const active = this.props.active ? ' active' : '';
-    const sidebar = this.context.sidebar.props;
-    const closeIcon = sidebar.closeIcon ? sidebar.closeIcon
-          : sidebar.position === 'right' ? "fa fa-caret-right"
+    const sidebar = this.context.sidebar;
+    const active = this.props.id === sidebar.state.selected ? ' active' : '';
+    const closeIcon = sidebar.props.closeIcon ? sidebar.props.closeIcon
+          : sidebar.props.position === 'right' ? "fa fa-caret-right"
           : "fa fa-caret-left";
     return (
       <div id="home" className={"sidebar-pane" + active}>
@@ -53,6 +53,7 @@ class Sidebar extends MapComponent<LeafletElement, Props> {
     super(props);
     this.state = {
       collapsed: !!props.collapsed,
+      selected: props.selected || React.Children.toArray(props.children)[0].props.id,
     };
   }
 
@@ -66,7 +67,7 @@ class Sidebar extends MapComponent<LeafletElement, Props> {
       icon = tab.props.icon();
     else if (typeof(tab.props.icon) === 'string')
       icon = <i className={tab.props.icon} />;
-    const active = tab.props.active ? ' active' : '';
+    const active = tab.props.id === this.state.selected ? ' active' : '';
     return (
       <li className={active} key={tab.props.id}>
         <a href={'#' + tab.props.id} role="tab">
@@ -85,7 +86,6 @@ class Sidebar extends MapComponent<LeafletElement, Props> {
     const bottomtabs = tabs.filter(t => t.props.anchor === 'bottom');
     const toptabs = tabs.filter(t => t.props.anchor !== 'bottom');
     return (
-      // FIXME: from child props (including first as "home", and maintaining "active" state)
       <div id="sidebar" className={"sidebar leaflet-touch" + position + collapsed}>
         <div className="sidebar-tabs">
           <ul role="tablist">   {/* Top-aligned */}
