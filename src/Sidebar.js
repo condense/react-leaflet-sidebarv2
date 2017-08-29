@@ -1,10 +1,10 @@
-import React                       from 'react'
-import { Control, Map }            from 'leaflet'
-import { MapComponent, PropTypes } from 'react-leaflet'
+import React            from 'react'
+import { Control, Map } from 'leaflet'
+import { MapComponent } from 'react-leaflet'
+import { PropTypes }    from 'prop-types'
 
 import 'leaflet-sidebar-v2/css/leaflet-sidebar.css'
 
-type LeafletElement = Control.Sidebar;
 type Props = {
   id: string,
   position?: string,            // left or right
@@ -17,19 +17,26 @@ type Props = {
 }
 
 class Tab extends React.Component {
+  static contextTypes = {
+    sidebar: PropTypes.object   // Hack due to forward-references
+  }
+
   // Props:
   // id
   // renderIcon
   // header
   // anchor?
   render() {
-    // TODO: handle caret-left/right appropriately, and different fonts
     const active = this.props.active ? ' active' : '';
+    const sidebar = this.context.sidebar.props;
+    const closeIcon = sidebar.closeIcon ? sidebar.closeIcon
+          : sidebar.position === 'right' ? "fa fa-caret-right"
+          : "fa fa-caret-left";
     return (
       <div id="home" className={"sidebar-pane" + active}>
         <h1 className="sidebar-header">
           {this.props.header}
-          <div className="sidebar-close"><i className="fa fa-caret-left"></i></div>
+          <div className="sidebar-close"><i className={closeIcon}></i></div>
         </h1>
         {this.props.children}
       </div>
@@ -38,8 +45,8 @@ class Tab extends React.Component {
 }
 
 class Sidebar extends MapComponent<LeafletElement, Props> {
-  static contextTypes = {
-    map: PropTypes.map,
+  static childContextTypes = {
+    sidebar: PropTypes.instanceOf(Sidebar),
   }
 
   constructor(props) {
@@ -47,6 +54,10 @@ class Sidebar extends MapComponent<LeafletElement, Props> {
     this.state = {
       collapsed: !!props.collapsed,
     };
+  }
+
+  getChildContext() {
+    return { sidebar: this };
   }
 
   renderTab(tab) {
