@@ -20,8 +20,9 @@ class Tab extends React.Component {
   // id
   // renderIcon
   // header
-  // anchor
+  // anchor?
   render() {
+    // TODO: handle caret-left/right appropriately, and different fonts
     return (
       <div id="home" className="sidebar-pane active">
         <h1 className="sidebar-header">
@@ -39,16 +40,45 @@ class Sidebar extends MapComponent<LeafletElement, Props> {
     map: PropTypes.map,
   }
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      collapsed: !!props.collapsed,
+    };
+  }
+
+  renderTab(tab) {
+    var icon;
+    if (typeof(tab.props.icon) === 'function')
+      icon = tab.props.icon();
+    else if (typeof(tab.props.icon) === 'string')
+      icon = <i className={tab.props.icon} />;
+    var active = tab.props.active ? ' active' : '';
+    return (
+      <li className={active} key={tab.props.id}>
+        <a href={'#' + tab.props.id} role="tab">
+          {icon}
+        </a>
+      </li>
+    );
+  }
+
   // Override render() so the <Map> element contains a div we can render to
   render() {
+    var position = ' sidebar-' + (this.props.position || 'left');
+    var collapsed = this.state.collapsed ? ' collapsed' : '';
+
+    var tabs = React.Children.toArray(this.props.children);
+    var bottomtabs = tabs.filter(t => t.props.anchor === 'bottom');
+    var toptabs = tabs.filter(t => t.props.anchor !== 'bottom');
     return (
       // FIXME: sidebar-left/right from props
       // FIXME: add/remove collapsed class (state)
       // FIXME: from child props (including first as "home", and maintaining "active" state)
-      <div id="sidebar" className="sidebar sidebar-left leaflet-touch">
+      <div id="sidebar" className={"sidebar leaflet-touch" + position + collapsed}>
         <div className="sidebar-tabs">
           <ul role="tablist">   {/* Top-aligned */}
-            <li className="active"><a href="#home" role="tab"><i className="fa fa-bars"></i></a></li>
+            {toptabs.map(t => this.renderTab(t))}
           </ul>
           <ul role="tablist">   {/* Bottom-aligned */}
           </ul>
