@@ -13,8 +13,11 @@ export default class SidebarExample extends Component {
             url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
           />
           <Sidebar id="sidebar">
-            <Tab id="home" header="Home">
+            <Tab id="home" header="Home" icon="fa fa-home">
               <p>Sidebar!</p>
+            </Tab>
+            <Tab id="settings" header="Settings" icon="fa fa-cog" anchor="bottom">
+              <p>Settings!</p>
             </Tab>
           </Sidebar>
         </Map>
