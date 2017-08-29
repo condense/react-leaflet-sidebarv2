@@ -55,7 +55,7 @@ class Sidebar extends MapComponent<LeafletElement, Props> {
       icon = tab.props.icon();
     else if (typeof(tab.props.icon) === 'string')
       icon = <i className={tab.props.icon} />;
-    var active = tab.props.active ? ' active' : '';
+    const active = tab.props.active ? ' active' : '';
     return (
       <li className={active} key={tab.props.id}>
         <a href={'#' + tab.props.id} role="tab">
@@ -67,12 +67,12 @@ class Sidebar extends MapComponent<LeafletElement, Props> {
 
   // Override render() so the <Map> element contains a div we can render to
   render() {
-    var position = ' sidebar-' + (this.props.position || 'left');
-    var collapsed = this.state.collapsed ? ' collapsed' : '';
+    const position = ' sidebar-' + (this.props.position || 'left');
+    const collapsed = this.state.collapsed ? ' collapsed' : '';
 
-    var tabs = React.Children.toArray(this.props.children);
-    var bottomtabs = tabs.filter(t => t.props.anchor === 'bottom');
-    var toptabs = tabs.filter(t => t.props.anchor !== 'bottom');
+    const tabs = React.Children.toArray(this.props.children);
+    const bottomtabs = tabs.filter(t => t.props.anchor === 'bottom');
+    const toptabs = tabs.filter(t => t.props.anchor !== 'bottom');
     return (
       // FIXME: from child props (including first as "home", and maintaining "active" state)
       <div id="sidebar" className={"sidebar leaflet-touch" + position + collapsed}>
