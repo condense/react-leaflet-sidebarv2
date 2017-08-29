@@ -1,20 +1,8 @@
 import React            from 'react'
-import { Control, Map } from 'leaflet'
 import { MapComponent } from 'react-leaflet'
 import { PropTypes }    from 'prop-types'
 
 import 'leaflet-sidebar-v2/css/leaflet-sidebar.css'
-
-type Props = {
-  id: string,
-  position?: string,            // left or right
-  selected?: string,
-  disabled?: boolean,
-  // renderClose?
-  // onOpening
-  // onClosing
-  // onContent
-}
 
 class Tab extends React.Component {
   static contextTypes = {
@@ -47,6 +35,7 @@ class Tab extends React.Component {
   }
 }
 
+// https://github.com/facebook/react/issues/2979#issuecomment-222379916
 const TabType = PropTypes.shape({
   type: PropTypes.oneOf([Tab])
 });
