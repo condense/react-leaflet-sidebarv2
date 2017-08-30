@@ -5,23 +5,22 @@ import { PropTypes }    from 'prop-types'
 import 'leaflet-sidebar-v2/css/leaflet-sidebar.css'
 
 class Tab extends React.Component {
-  static contextTypes = {
-    sidebar: PropTypes.object   // Hack due to forward-references
-  }
-
   static propTypes = {
     id: PropTypes.string.isRequired,
     header: PropTypes.string.isRequired,
     icon: PropTypes.oneOfType([PropTypes.string, PropTypes.func]).isRequired,
-    closeIcon: PropTypes.string,
     anchor: PropTypes.oneOf(['top', 'bottom']),
+    // Provided by the Sidebar; don't mark as required (user doesn't need to include them):
+    onClose: PropTypes.func,
+    closeIcon: PropTypes.string,
+    position: PropTypes.oneOf(['left', 'right']),
+    active: PropTypes.bool,
   }
 
   render() {
-    const sidebar = this.context.sidebar;
-    const active = this.props.id === sidebar.props.selected ? ' active' : '';
-    const closeIcon = sidebar.props.closeIcon ? sidebar.props.closeIcon
-          : sidebar.props.position === 'right' ? "fa fa-caret-right"
+    const active = this.props.active ? ' active' : '';
+    const closeIcon = this.props.closeIcon ? this.props.closeIcon
+          : this.props.position === 'right' ? "fa fa-caret-right"
           : "fa fa-caret-left";
     return (
       <div id="home" className={"sidebar-pane" + active}>
@@ -41,25 +40,18 @@ const TabType = PropTypes.shape({
 });
 
 class Sidebar extends MapComponent<LeafletElement, Props> {
-  static childContextTypes = {
-    sidebar: PropTypes.instanceOf(Sidebar),
-  }
-
   static propTypes = {
     id: PropTypes.string.isRequired,
     collapsed: PropTypes.bool,
     position: PropTypes.oneOf(['left', 'right']),
     selected: PropTypes.string,
+    closeIcon: PropTypes.string,
     onClose: PropTypes.func,
     onOpen: PropTypes.func,
     children: PropTypes.oneOfType([
       PropTypes.arrayOf(TabType),
       TabType
     ]).isRequired,
-  }
-
-  getChildContext() {
-    return { sidebar: this };
   }
 
   onClose(e) {
@@ -92,7 +84,10 @@ class Sidebar extends MapComponent<LeafletElement, Props> {
 
   renderPanes(children) {
     return React.Children.map(children,
-                              p => React.cloneElement(p, {onClose: this.onClose.bind(this)}))
+        p => React.cloneElement(p, {onClose: this.onClose.bind(this),
+                                    closeIcon: this.props.closeIcon,
+                                    active: p.props.id === this.props.selected,
+                                    position: this.props.position || 'left'}));
   }
 
   // Override render() so the <Map> element contains a div we can render to
