@@ -10,6 +10,7 @@ class Tab extends React.Component {
     header: PropTypes.string.isRequired,
     icon: PropTypes.oneOfType([PropTypes.string, PropTypes.func]).isRequired,
     anchor: PropTypes.oneOf(['top', 'bottom']),
+    disabled: PropTypes.bool,
     // Provided by the Sidebar; don't mark as required (user doesn't need to include them):
     onClose: PropTypes.func,
     closeIcon: PropTypes.string,
@@ -73,9 +74,10 @@ class Sidebar extends MapComponent<LeafletElement, Props> {
     else if (typeof(tab.props.icon) === 'string')
       icon = <i className={tab.props.icon} />;
     const active = tab.props.id === this.props.selected ? ' active' : '';
+    const disabled = tab.props.disabled ? ' disabled' : '';
     return (
-      <li className={active} key={tab.props.id}>
-        <a href={'#' + tab.props.id} role="tab" onClick={e => this.onOpen(e, tab.props.id)}>
+      <li className={active + disabled} key={tab.props.id}>
+        <a href={'#' + tab.props.id} role="tab" onClick={e => tab.props.disabled || this.onOpen(e, tab.props.id)}>
           {icon}
         </a>
       </li>
