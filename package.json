@@ -12,7 +12,6 @@
     "url": "https://github.com/condense/react-leaflet-sidebarv2/issues"
   },
   "author": "Mark Hepburn",
-  "private": true,
   "dependencies": {},
   "peerDependencies": {
     "leaflet-sidebar-v2": "^1.0.0",
