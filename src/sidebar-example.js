@@ -32,10 +32,10 @@ export default class SidebarExample extends Component {
           <Sidebar id="sidebar" collapsed={this.state.collapsed} selected={this.state.selected}
                    onOpen={this.onOpen.bind(this)} onClose={this.onClose.bind(this)}>
             <Tab id="home" header="Home" icon="fa fa-home">
-              <p>Sidebar!</p>
+              <p>No place like home!</p>
             </Tab>
             <Tab id="settings" header="Settings" icon="fa fa-cog" anchor="bottom">
-              <p>Settings!</p>
+              <p>Settings dialogue.</p>
             </Tab>
           </Sidebar>
         </Map>

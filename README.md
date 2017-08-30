@@ -8,38 +8,67 @@ of [sidebar-v2](https://github.com/Turbo87/sidebar-v2))
 
 The twist is the implementation of sidebar-v2 isn't very compatible
 with React, so this plugin actually renders all markup via React,
-including event handling, and just leverages the CSS from sidebar.
+including event handling, and just leverages the CSS from sidebar-v2.
 
-## Working notes
+## Getting Started
 
-Rough thinking; markup can look something like:
+You will need to include the sidebar-v2 css in your page somehow, for
+example
+[via a CDN](https://unpkg.com/leaflet-sidebar-v2@1.0.0/css/leaflet-sidebar.min.css),
+or if your build pipeline supports it it should be included
+automatically.
+
+Include `Sidebar` as a child component of react-leaflet `Map`, with
+whatever `Tab` children as required for your layout.  The `Sidebar`
+component is stateless; all state information should be passed as
+props, and desired state changes communicated upwards via the `onOpen`
+and `onClose` callback.  A minimal example might look like the
+following:
 
 ```jsx
-<Map>
-  <TileLayer attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-             url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
-             />
+import React, { Component } from 'react';
+import { Map, TileLayer } from 'react-leaflet';
+import { Sidebar, Tab } from 'react-leaflet-sidebarv2';
 
-  <Sidebar id="sidebar" position="left" selected="foo">
-    <Tab id="foo" anchor="top" renderIcon={() => <i.fa.fa-open />}>
-      <div>... </div>
-    </Tab>
-  </Sidebar>
-</Map>
+export default class SidebarExample extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      collapsed: false,
+      selected: 'home',
+    };
+  }
+
+  onClose() {
+    this.setState({collapsed: true});
+  }
+  onOpen(id) {
+    this.setState({
+      collapsed: false,
+      selected: id,
+    })
+  }
+
+  render() {
+    return (
+      <div>
+        <Map center={[51.505, -0.09]} zoom={13} zoomControl={false}>
+          <TileLayer
+            attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+            url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
+          />
+          <Sidebar id="sidebar" collapsed={this.state.collapsed} selected={this.state.selected}
+                   onOpen={this.onOpen.bind(this)} onClose={this.onClose.bind(this)}>
+            <Tab id="home" header="Home" icon="fa fa-home">
+              <p>No place like home!</p>
+            </Tab>
+            <Tab id="settings" header="Settings" icon="fa fa-cog" anchor="bottom">
+              <p>Settings dialogue.</p>
+            </Tab>
+          </Sidebar>
+        </Map>
+      </div>
+    );
+  }
+}
 ```
-
-The sidebar div is attached inside the map element, which we have
-access to and will require some thought around event bubbling but
-should otherwise render fine.  Then we can use regular react logic,
-render the components into one big div, and let React and
-leaflet-sidebar take care of the rest.
-
-Sidebar props: `id` required; `position` defaults to "left"
-(alternative "right"); `selected` defaults to null.  Also event
-handlers `onOpening`, `onClosing`, `onContent`.
-
-Tab props: `id` and `renderIcon` should be required, but `anchor` (values
-"top"/"bottom") can default to "top".
-
-Also want to somehow automatically manage the "home" tab; probably the
-easiest approach is that the first tab is the home one.
