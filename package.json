@@ -1,6 +1,6 @@
 {
   "name": "react-leaflet-sidebarv2",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A react-leaflet plugin for leaflet-sidebar-v2",
   "keywords": ["react", "leaflet", "sidebar"],
   "main": "lib/index.js",
