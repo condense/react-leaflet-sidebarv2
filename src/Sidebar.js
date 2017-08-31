@@ -22,7 +22,7 @@ class Tab extends React.Component {
           : this.props.position === 'right' ? "fa fa-caret-right"
           : "fa fa-caret-left";
     return (
-      <div id="home" className={"sidebar-pane" + active}>
+      <div id={this.props.id} className={"sidebar-pane" + active}>
         <h1 className="sidebar-header">
           {this.props.header}
           <div className="sidebar-close"><i className={closeIcon} onClick={this.props.onClose}></i></div>
