@@ -2,6 +2,7 @@
   "name": "react-leaflet-sidebarv2",
   "version": "0.1.1",
   "description": "A react-leaflet plugin for leaflet-sidebar-v2",
+  "license": "MIT",
   "keywords": [
     "react",
     "leaflet",
