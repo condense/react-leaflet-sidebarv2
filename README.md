@@ -14,10 +14,9 @@ including event handling, and just leverages the CSS from sidebar-v2.
 
 You will need to include the sidebar-v2 css in your page somehow, for
 example
-[via a CDN](https://unpkg.com/leaflet-sidebar-v2@1.0.0/css/leaflet-sidebar.min.css),
-or if your build pipeline supports it it should be included
-automatically. The close icons default to fontawesome, so this will
-also need to be included.
+[via a CDN](https://unpkg.com/leaflet-sidebar-v2@1.0.0/css/leaflet-sidebar.min.css). The
+close icons default to fontawesome, so this will also need to be
+included.
 
 Include `Sidebar` as a child component of react-leaflet `Map`, with
 whatever `Tab` children as required for your layout.  The `Sidebar`

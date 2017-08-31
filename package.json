@@ -1,6 +1,6 @@
 {
   "name": "react-leaflet-sidebarv2",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "A react-leaflet plugin for leaflet-sidebar-v2",
   "license": "MIT",
   "keywords": [
@@ -19,7 +19,6 @@
   "author": "Mark Hepburn",
   "dependencies": {},
   "peerDependencies": {
-    "leaflet-sidebar-v2": "^1.0.0",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
     "react-leaflet": "^1.6.4"

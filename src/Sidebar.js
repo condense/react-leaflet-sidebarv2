@@ -2,8 +2,6 @@ import React            from 'react'
 import { MapComponent } from 'react-leaflet'
 import { PropTypes }    from 'prop-types'
 
-import 'leaflet-sidebar-v2/css/leaflet-sidebar.css'
-
 class Tab extends React.Component {
   static propTypes = {
     id: PropTypes.string.isRequired,
