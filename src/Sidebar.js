@@ -6,26 +6,34 @@ class Tab extends React.Component {
   static propTypes = {
     id: PropTypes.string.isRequired,
     header: PropTypes.string.isRequired,
-    icon: PropTypes.oneOfType([PropTypes.string, PropTypes.func]).isRequired,
+    icon: PropTypes.oneOfType([PropTypes.string, PropTypes.element]).isRequired,
     anchor: PropTypes.oneOf(['top', 'bottom']),
     disabled: PropTypes.bool,
     // Provided by the Sidebar; don't mark as required (user doesn't need to include them):
     onClose: PropTypes.func,
-    closeIcon: PropTypes.string,
+    closeIcon: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
     position: PropTypes.oneOf(['left', 'right']),
     active: PropTypes.bool,
   }
 
   render() {
     const active = this.props.active ? ' active' : '';
-    const closeIcon = this.props.closeIcon ? this.props.closeIcon
-          : this.props.position === 'right' ? "fa fa-caret-right"
-          : "fa fa-caret-left";
+    var closeIcon;
+    if (typeof(this.props.closeIcon) === 'string')
+      closeIcon = <i className={this.props.closeIcon} />;
+    else if (typeof(this.props.closeIcon) === 'object')
+      closeIcon = this.props.closeIcon;
+    else {
+      const closecls = this.props.position === 'right' ? "fa fa-caret-right" : "fa fa-caret-left";
+      closeIcon = <i className={closecls} />
+    }
     return (
       <div id={this.props.id} className={"sidebar-pane" + active}>
         <h1 className="sidebar-header">
           {this.props.header}
-          <div className="sidebar-close"><i className={closeIcon} onClick={this.props.onClose}></i></div>
+          <div className="sidebar-close" onClick={this.props.onClose}>
+            {closeIcon}
+          </div>
         </h1>
         {this.props.children}
       </div>
@@ -57,7 +65,7 @@ class Sidebar extends MapComponent<LeafletElement, Props> {
     collapsed: PropTypes.bool,
     position: PropTypes.oneOf(['left', 'right']),
     selected: PropTypes.string,
-    closeIcon: PropTypes.string,
+    closeIcon: PropTypes.oneOfType([PropTypes.string, PropTypes.element]).isRequired,
     onClose: PropTypes.func,
     onOpen: PropTypes.func,
     children: PropTypes.oneOfType([
@@ -98,10 +106,10 @@ class Sidebar extends MapComponent<LeafletElement, Props> {
 
   renderTab(tab) {
     var icon;
-    if (typeof(tab.props.icon) === 'function')
-      icon = tab.props.icon();
-    else if (typeof(tab.props.icon) === 'string')
+    if (typeof(tab.props.icon) === 'string')
       icon = <i className={tab.props.icon} />;
+    else if (typeof(tab.props.icon) === 'object')
+      icon = tab.props.icon;
     const active = tab.props.id === this.props.selected ? ' active' : '';
     const disabled = tab.props.disabled ? ' disabled' : '';
     return (
