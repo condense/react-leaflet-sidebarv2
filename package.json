@@ -72,6 +72,7 @@
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
     "lib": "babel src --out-dir lib --copy-files",
+    "lib:watch": "babel src --out-dir lib --copy-files -w",
     "test": "node scripts/test.js --env=jsdom"
   },
   "jest": {
