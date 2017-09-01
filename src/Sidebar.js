@@ -41,19 +41,6 @@ class Tab extends React.Component {
   }
 }
 
-// We need to prevent *native* events bubbling up to leaflet.  React
-// attaches a global event handler to the document, so using
-// stopPropagation on a React synthetic event has no effect because it
-// has already been caught by leaflet.  Note the ref on our root
-// element.
-// We don't ignore 'click', because then our onOpen/Close handlers wouldn't work!
-const ignoreEvents = ['dblclick',
-                      'mouseover', 'mouseout', 'mousedown', 'mouseup', 'mousemove', 'wheel',
-                      'pointerdown', 'pointermove', 'pointerup',
-                      'MSPointerDown', 'MSPointerMove', 'MSPointerUp',
-                      'touchdown', 'touchmove', 'touchup',
-                      'dragstart', 'drag', 'dragend'];
-
 // https://github.com/facebook/react/issues/2979#issuecomment-222379916
 const TabType = PropTypes.shape({
   type: PropTypes.oneOf([Tab])
@@ -74,11 +61,6 @@ class Sidebar extends MapComponent<LeafletElement, Props> {
     ]).isRequired,
   }
 
-  constructor(props) {
-    super(props);
-    this.ignoreEvent = this.ignoreEvent.bind(this);
-  }
-
   onClose(e) {
     e.preventDefault();
     e.stopPropagation();
@@ -89,19 +71,6 @@ class Sidebar extends MapComponent<LeafletElement, Props> {
     e.preventDefault();
     e.stopPropagation();
     this.props.onOpen && this.props.onOpen(tabid);
-  }
-
-  ignoreEvent(e) {
-    e.stopPropagation();
-    e.preventDefault();
-  }
-
-  componentDidMount() {
-    ignoreEvents.forEach(e => this.rootElement.addEventListener(e, this.ignoreEvent));
-  }
-
-  componentWillUnmount() {
-    ignoreEvents.forEach(e => this.rootElement.removeEventListener(e, this.ignoreEvent));
   }
 
   renderTab(tab) {

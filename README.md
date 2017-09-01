@@ -18,12 +18,23 @@ example
 close icons default to fontawesome, so this will also need to be
 included.
 
-Include `Sidebar` as a child component of react-leaflet `Map`, with
-whatever `Tab` children as required for your layout.  The `Sidebar`
-component is stateless; all state information should be passed as
-props, and desired state changes communicated upwards via the `onOpen`
-and `onClose` callback.  A minimal example might look like the
-following:
+You will typically include `Sidebar` as a _sibling_ component of
+react-leaflet `Map`, contained in a wrapper div so the sidebar is
+positioned relative to the map, with whatever `Tab` children are
+required for your layout.  This is because of event handling: if the
+sidebar is a child of the map element, events will bubble up and be
+handled by leaflet first (this is because React events are actually
+handled by a single handler at the document root, so they will always
+bubble up through leaflet first).  _A previous commit
+([a9156e8bb7](https://github.com/condense/react-leaflet-sidebarv2/commit/a9156e8bb71501639be1c06552fb11521f111c86))
+attempted to solve this by disabling native events at the sidebar
+root, but I found too many complications.  If anyone solves this I
+would love a PR!_
+
+The `Sidebar` component is stateless; all state information should be
+passed as props, and desired state changes communicated upwards via
+the `onOpen` and `onClose` callback.  A minimal example might look
+like the following:
 
 ```jsx
 import React, { Component } from 'react';
@@ -57,16 +68,16 @@ export default class SidebarExample extends Component {
             attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
             url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
           />
-          <Sidebar id="sidebar" collapsed={this.state.collapsed} selected={this.state.selected}
-                   onOpen={this.onOpen.bind(this)} onClose={this.onClose.bind(this)}>
-            <Tab id="home" header="Home" icon="fa fa-home">
-              <p>No place like home!</p>
-            </Tab>
-            <Tab id="settings" header="Settings" icon="fa fa-cog" anchor="bottom">
-              <p>Settings dialogue.</p>
-            </Tab>
-          </Sidebar>
         </Map>
+        <Sidebar id="sidebar" collapsed={this.state.collapsed} selected={this.state.selected}
+                 onOpen={this.onOpen.bind(this)} onClose={this.onClose.bind(this)}>
+          <Tab id="home" header="Home" icon="fa fa-home">
+            <p>No place like home!</p>
+          </Tab>
+          <Tab id="settings" header="Settings" icon="fa fa-cog" anchor="bottom">
+            <p>Settings dialogue.</p>
+          </Tab>
+        </Sidebar>
       </div>
     );
   }
