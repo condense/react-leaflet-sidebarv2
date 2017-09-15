@@ -34,7 +34,9 @@ would love a PR!_
 The `Sidebar` component is stateless; all state information should be
 passed as props, and desired state changes communicated upwards via
 the `onOpen` and `onClose` callback.  A minimal example might look
-like the following:
+like the following (also note that to work with the default css, the
+`Map` needs a `sidebar-map` class, and the `Sidebar` needs to be
+_before_ the `Map`):
 
 ```jsx
 import React, { Component } from 'react';
@@ -63,12 +65,6 @@ export default class SidebarExample extends Component {
   render() {
     return (
       <div>
-        <Map center={[51.505, -0.09]} zoom={13} zoomControl={false}>
-          <TileLayer
-            attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-            url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
-          />
-        </Map>
         <Sidebar id="sidebar" collapsed={this.state.collapsed} selected={this.state.selected}
                  onOpen={this.onOpen.bind(this)} onClose={this.onClose.bind(this)}>
           <Tab id="home" header="Home" icon="fa fa-home">
@@ -78,6 +74,12 @@ export default class SidebarExample extends Component {
             <p>Settings dialogue.</p>
           </Tab>
         </Sidebar>
+        <Map className="sidebar-map" center={[51.505, -0.09]} zoom={13} zoomControl={false}>
+          <TileLayer
+            attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+            url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
+          />
+        </Map>
       </div>
     );
   }
