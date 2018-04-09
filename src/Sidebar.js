@@ -103,7 +103,7 @@ class Sidebar extends MapComponent<LeafletElement, Props> {
     const position = ' sidebar-' + (this.props.position || 'left');
     const collapsed = this.props.collapsed ? ' collapsed' : '';
 
-    const tabs = React.Children.toArray(this.props.children);
+    const tabs = React.Children.toArray(this.props.children).filter(c => !!c);
     const bottomtabs = tabs.filter(t => t.props.anchor === 'bottom');
     const toptabs = tabs.filter(t => t.props.anchor !== 'bottom');
     return (
@@ -118,7 +118,7 @@ class Sidebar extends MapComponent<LeafletElement, Props> {
           </ul>
         </div>
         <div className="sidebar-content">
-          {this.renderPanes(this.props.children)}
+          {this.renderPanes(tabs)}
         </div>
       </div>
     );
