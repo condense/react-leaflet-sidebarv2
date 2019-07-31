@@ -21,19 +21,19 @@ included.
 You will typically include `Sidebar` as a _sibling_ component of
 react-leaflet `Map`, contained in a wrapper div so the sidebar is
 positioned relative to the map, with whatever `Tab` children are
-required for your layout.  This is because of event handling: if the
+required for your layout. This is because of event handling: if the
 sidebar is a child of the map element, events will bubble up and be
 handled by leaflet first (this is because React events are actually
 handled by a single handler at the document root, so they will always
-bubble up through leaflet first).  _A previous commit
+bubble up through leaflet first). _A previous commit
 ([a9156e8bb7](https://github.com/condense/react-leaflet-sidebarv2/commit/a9156e8bb71501639be1c06552fb11521f111c86))
 attempted to solve this by disabling native events at the sidebar
-root, but I found too many complications.  If anyone solves this I
+root, but I found too many complications. If anyone solves this I
 would love a PR!_
 
 The `Sidebar` component is stateless; all state information should be
 passed as props, and desired state changes communicated upwards via
-the `onOpen` and `onClose` callback.  A minimal example might look
+the `onOpen` and `onClose` callback. A minimal example might look
 like the following (also note that to work with the default css, the
 `Map` needs a `sidebar-map` class, and the `Sidebar` needs to be
 _before_ the `Map`):
@@ -48,25 +48,30 @@ export default class SidebarExample extends Component {
     super(props);
     this.state = {
       collapsed: false,
-      selected: 'home',
+      selected: 'home'
     };
   }
 
   onClose() {
-    this.setState({collapsed: true});
+    this.setState({ collapsed: true });
   }
   onOpen(id) {
     this.setState({
       collapsed: false,
-      selected: id,
-    })
+      selected: id
+    });
   }
 
   render() {
     return (
       <div>
-        <Sidebar id="sidebar" collapsed={this.state.collapsed} selected={this.state.selected}
-                 onOpen={this.onOpen.bind(this)} onClose={this.onClose.bind(this)}>
+        <Sidebar
+          id="sidebar"
+          collapsed={this.state.collapsed}
+          selected={this.state.selected}
+          onOpen={this.onOpen.bind(this)}
+          onClose={this.onClose.bind(this)}
+        >
           <Tab id="home" header="Home" icon="fa fa-home">
             <p>No place like home!</p>
           </Tab>
@@ -74,7 +79,12 @@ export default class SidebarExample extends Component {
             <p>Settings dialogue.</p>
           </Tab>
         </Sidebar>
-        <Map className="sidebar-map" center={[51.505, -0.09]} zoom={13} zoomControl={false}>
+        <Map
+          className="sidebar-map"
+          center={[51.505, -0.09]}
+          zoom={13}
+          zoomControl={false}
+        >
           <TileLayer
             attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
             url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
@@ -85,3 +95,24 @@ export default class SidebarExample extends Component {
   }
 }
 ```
+
+## API
+
+### Sidebar
+
+- `id`: _String_ **Required** ID of sidebar
+- `position`: _String_ position of sidebar. Values: "left", "right"
+- `collapsed`: _Boolean_ initial collapsed state
+- `selected`: _String_ ID of selected tab
+- `closeIcon`: _String/Component_ **Required** Icon for close button, E.g. "fa fa-times", or React component
+- `onOpen`: _Func_ Event
+- `onClose`: _Func_ Event
+
+### Tab
+
+- `id`: _String_ **Required** ID of tab for use with state
+- `header`: _String_ **Required** Title of tab
+- `icon`: _String/Component_ **Required** Icon for the tab E.g. "fa fa-cog", or React component
+- `anchor`: _String_ Fix tab to top or bottom. Values: "top", "bottom"
+- `active`: _Boolean_ Initial active state
+- `disabled`: _Boolean_
