@@ -83,7 +83,7 @@ class Sidebar extends MapComponent<LeafletElement, Props> {
     const disabled = tab.props.disabled ? ' disabled' : '';
     return (
       <li className={active + disabled} key={tab.props.id}>
-        <a href={'#' + tab.props.id} role="tab" onClick={e => tab.props.disabled || this.onOpen(e, tab.props.id)}>
+        <a href={'#' + tab.props.id} role="tab" onClick={e => tab.props.disabled || (tab.props.id === this.props.selected) ? this.onClose(e) : this.onOpen(e, tab.props.id)}>
           {icon}
         </a>
       </li>
